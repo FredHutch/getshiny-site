@@ -1,0 +1,55 @@
+{
+  "name": "pipeline-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "bootstrap": "^4.1.1",
+    "cors": "^2.8.4",
+    "github-api": "^3.0.0",
+    "hubfs.js": "^1.0.0",
+    "jquery": "^3.3.1",
+    "material-design-icons-iconfont": "^3.0.3",
+    "nodemailer": "^4.6.6",
+    "popper.js": "^1.14.3",
+    "sendmail": "^1.4.1",
+    "vue": "^2.5.16",
+    "vue-resource": "^1.5.1",
+    "vuetify": "^1.1.13"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^3.0.0-beta.15",
+    "@vue/cli-plugin-eslint": "^3.0.0-beta.15",
+    "@vue/cli-service": "^3.0.0-beta.15",
+    "vue-template-compiler": "^2.5.16"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "eslint:recommended"
+    ],
+    "rules": {},
+    "parserOptions": {
+      "parser": "babel-eslint"
+    }
+  },
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {}
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ]
+}
