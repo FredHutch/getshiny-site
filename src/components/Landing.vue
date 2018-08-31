@@ -234,11 +234,9 @@
       save: function () {
         if (this.valid && this.$refs.form.validate()) {
           console.log(this.request);
-          console.log('&&& =>', process.env.VUE_APP_URL);
           this.$http
-            .post('https://getshiny.fredhutch.org:443/notify', JSON.stringify(this.request), {headers:{
+            .post('https://getshiny.fredhutch.org/notify', JSON.stringify(this.request), {headers:{
             // .post('http://localhost:3000' + '/notify', JSON.stringify(this.request), {headers:{
-            // .post('http://ec2-35-164-72-182.us-west-2.compute.amazonaws.com:3000/notify', JSON.stringify(this.request), {headers:{
                 'Content-Type': 'application/json',
                 'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0'
               }})
