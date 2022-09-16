@@ -7,6 +7,8 @@ services:
     environment:
       - SERVICE_EMAIL=scicomp@fredhutch.org
     deploy:
+      restart_policy:
+        condition: on-failure
       labels:
         - "traefik.enable=true"
         - "traefik.http.routers.getshiny.rule=Host(`getshiny.fredhutch.org`)"
@@ -15,8 +17,6 @@ services:
         - "traefik.http.services.getshiny.loadbalancer.server.port=8080" # it seems you always need to give traefik a port so it 'notices' the service
         - "traefik.http.routers.getshiny.tls=true"
 
-    restart_policy:
-      condition: on-failure
 networks:
   proxy:
     external: true
