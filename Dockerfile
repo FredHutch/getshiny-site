@@ -1,5 +1,7 @@
 # Create image based on the official Node 6 image from dockerhub
-FROM node:6
+
+FROM node:latest
+#FROM node:6
 
 ARG MAIL_PASSWORD=local
 ENV MAIL_PASSWORD ${MAIL_PASSWORD}
@@ -26,6 +28,7 @@ RUN npm install
 # RUN npm install http-server -g
 # COPY /dist .
 COPY /server server
+
 # COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 EXPOSE 3000 8080

@@ -235,7 +235,7 @@
         if (this.valid && this.$refs.form.validate()) {
           console.log(this.request);
           this.$http
-            .post('https://getshiny.fredhutch.org/notify', JSON.stringify(this.request), {headers:{
+            .post('/notify', JSON.stringify(this.request), {headers:{
             // .post('http://localhost:3000' + '/notify', JSON.stringify(this.request), {headers:{
                 'Content-Type': 'application/json',
                 'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0'
