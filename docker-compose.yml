@@ -3,7 +3,7 @@ services:
   getshiny:
     networks:
       - proxy
-    image: dockerimages.fhcrc.org/getshiny:latest
+    image: sc-registry.fredhutch.org/getshiny:latest
     environment:
       - SERVICE_EMAIL=scicomp@fredhutch.org
     deploy:

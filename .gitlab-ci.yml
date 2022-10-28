@@ -1,28 +1,44 @@
+before_script:
+  - apk update
+  - apk --no-cache add py3-pip python3 curl
+  - pip3 install pyyaml
+  - curl -O https://raw.githubusercontent.com/FredHutch/swarm-build-helper/main/build_helper.py
+  # below is from https://stackoverflow.com/a/65810302/470769
+  - mkdir -p $HOME/.docker
+  - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
+  - set -x
+
+stages:
+  - build
+  - test
+  - deploy
 
 
-build_test:
+build:
+  stage: build
   script:
-    - ~/bin/build_helper.py docker-compose.yml > /dev/null
-    - docker build -t dockerimages.fhcrc.org/getshiny:latest .
-    - |
-        if docker ps -a|tr -s ' '|rev|cut -d ' ' -f 1|rev|grep -q getshiny
-        then
-          docker stop getshiny && docker rm --force getshiny
-        fi
-    - docker run -d --name getshiny -p 8181:8080 dockerimages.fhcrc.org/getshiny:latest
-    - sleep 15 && curl -sI  http://localhost:8181  |head -1|grep -q "200 OK"
-    - docker stop getshiny && docker rm --force getshiny
+    - python3 build_helper.py docker-compose.yml > /dev/null
+    - docker build -t sc-registry.fredhutch.org/getshiny:test .
+    - docker push sc-registry.fredhutch.org/getshiny:test
 
+
+test:
+  stage: test
+  services:
+    - name: sc-registry.fredhutch.org/getshiny:test
+      alias: getshiny
+  script: |
+    curl -sI  http://getshiny:8080 |head -1|grep -q "200 OK"
 
 deploy:
   only:
     refs:
         - main
   script:
-    - docker login --username $DOCKERIMAGES_USER --password $DOCKERIMAGES_PASS https://dockerimages.fhcrc.org
-    - docker push dockerimages.fhcrc.org/getshiny:latest
+    - docker tag sc-registry.fredhutch.org/getshiny:test sc-registry.fredhutch.org/getshiny:latest
+    - docker push sc-registry.fredhutch.org/getshiny:latest
     - sleep 15
     - echo $SC_SWARM_CICD_SSH_KEY | base64 -d > ./sc_swarm_cicd_ssh_key
     - chmod 0400 ./sc_swarm_cicd_ssh_key
-    - ~/bin/build_helper.py docker-compose.yml | ssh -i ./sc_swarm_cicd_ssh_key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@sc-swarm-mgr.fhcrc.org docker stack deploy --with-registry-auth -c - getshiny
+    - python3 build_helper.py docker-compose.yml | ssh -i ./sc_swarm_cicd_ssh_key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@sc-swarm-mgr.fhcrc.org docker stack deploy --with-registry-auth -c - getshiny
     - rm -f ./sc_swarm_cicd_ssh_key
